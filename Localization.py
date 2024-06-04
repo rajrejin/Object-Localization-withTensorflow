@@ -120,7 +120,7 @@ plt.show()
 plt.pause(5)
 plt.close()
 
-#Building the model
+#Build the model
 input_ = Input(shape = (144, 144, 3), name = 'image')
 
 x = input_
@@ -140,7 +140,7 @@ box_out = Dense(2, name = 'box_out')(x)
 model = tf.keras.models.Model(input_, [class_out, box_out])
 model.summary()
 
-#Custom metric: IOU
+#Define a custom Intersection Over Union (IOU) metric
 class IoU(tf.keras.metrics.Metric):
     def __init__(self, **kwargs):
         super(IoU, self).__init__(**kwargs)
@@ -184,7 +184,7 @@ class IoU(tf.keras.metrics.Metric):
     def reset_states(self):
         self.iou.assign(0.)
 
-# Compiling the model
+# Compile the model
 model.compile(
     loss = {
         'class_out': 'categorical_crossentropy',
@@ -197,11 +197,11 @@ model.compile(
     }
 )
 
-# Custom Callback: Model Testing
+# Testing the model
 def test_model(model, test_datagen, epoch):
     plt.figure(figsize=(6, 6))  # Create a new figure for each epoch
     classes = random.sample(list(emojis.keys()), 4)  # Randomly select 4 classes
-    for i, class_id in enumerate(classes):  # For each of the selected classes
+    for i in range(len(classes)):
         example, label = next(test_datagen)
         x = example['image']
         y = label['class_out']
